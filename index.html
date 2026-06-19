@@ -7,9 +7,7 @@
 
 <style>
 
-*{
-    box-sizing:border-box;
-}
+*{box-sizing:border-box;}
 
 body{
     font-family:Arial;
@@ -18,25 +16,10 @@ body{
 }
 
 /* DARK MODE */
-body.dark{
-    background:#121212;
-    color:white;
-}
-
-body.dark .card{
-    background:#1e1e1e;
-    color:white;
-}
-
-body.dark .cell{
-    background:#2a2a2a;
-    color:white;
-}
-
-body.dark .header{
-    background:#333;
-}
-
+body.dark{background:#121212;color:white;}
+body.dark .card{background:#1e1e1e;color:white;}
+body.dark .cell{background:#2a2a2a;color:white;}
+body.dark .header{background:#333;}
 body.dark input,
 body.dark select{
     background:#2a2a2a;
@@ -44,23 +27,25 @@ body.dark select{
     border:1px solid #555;
 }
 
-/* TITLE */
+/* TOP BAR FIX */
 .topBar{
     display:flex;
-    justify-content:center;
     align-items:center;
-    gap:15px;
-    padding:20px;
+    justify-content:space-between;  /* 🔥 important */
+    padding:15px 20px;
     flex-wrap:wrap;
 }
 
-h1{
-    margin:0;
-    font-size:40px;
+/* RIGHT SIDE GROUP */
+.rightControls{
+    display:flex;
+    align-items:center;
+    gap:10px;
 }
 
 /* FILTER */
 #filterType{
+    margin-right:150px ;
     width:150px;
     padding:8px;
     border-radius:10px;
@@ -105,20 +90,9 @@ button{
     margin-bottom:10px;
 }
 
-.add{
-    background:#2196F3;
-    color:white;
-}
-
-.primary{
-    background:#4CAF50;
-    color:white;
-}
-
-.back{
-    background:#f44336;
-    color:white;
-}
+.add{background:#2196F3;color:white;}
+.primary{background:#4CAF50;color:white;}
+.back{background:#f44336;color:white;}
 
 .editBtn{
     background:#d08b1f;
@@ -133,18 +107,18 @@ button{
 /* TABLE */
 .table{
     display:grid;
-
     grid-template-columns:
-    1.2fr
-    0.7fr
-    1.2fr
-    1fr
-    1fr
-    0.8fr;
+    minmax(80px,1.2fr)
+    minmax(50px,0.7fr)
+    minmax(90px,1.2fr)
+    minmax(70px,1fr)
+    minmax(80px,1fr)
+    90px;
 
     gap:6px;
     margin-top:8px;
     align-items:center;
+    min-width:700px;
 }
 
 /* HEADER */
@@ -165,20 +139,14 @@ button{
     padding:10px 6px;
     border-radius:10px;
     font-size:13px;
-
     overflow:hidden;
     text-overflow:ellipsis;
     white-space:nowrap;
 }
 
-/* PAGE */
-.section{
-    display:none;
-}
-
-.active{
-    display:block;
-}
+/* SECTION */
+.section{display:none;}
+.active{display:block;}
 
 /* BADGE */
 .badge{
@@ -186,26 +154,18 @@ button{
     border-radius:12px;
     font-size:12px;
     color:white;
-    display:inline-block;
 }
 
-.tutorial{ background:#d22f0a; }
-.assignment{ background:#c8b400; }
-.quiz{ background:#0c9f35; }
-.discussion{ background:#2304d6; }
-.default{ background:#9b0396; }
+.tutorial{background:#d22f0a;}
+.assignment{background:#c8b400;}
+.quiz{background:#0c9f35;}
+.discussion{background:#2304d6;}
+.default{background:#9b0396;}
 
 /* MOBILE */
 @media(max-width:700px){
 
-    .topBar{
-        justify-content:space-between;
-        padding:15px;
-    }
-
-    h1{
-        font-size:24px;
-    }
+    .leftTitle{font-size:22px;}
 
     #filterType{
         width:120px;
@@ -216,30 +176,11 @@ button{
         font-size:20px;
     }
 
-    .card{
-        width:96%;
-        padding:10px;
-    }
+    .table{min-width:650px;}
 
-    .table{
-        grid-template-columns:
-        80px
-        50px
-        90px
-        80px
-        80px
-        70px;
+    .card{overflow-x:auto;}
 
-        overflow-x:auto;
-        gap:5px;
-    }
-
-    .header{
-        font-size:11px;
-        padding:8px 4px;
-    }
-
-    .cell{
+    .header,.cell{
         font-size:11px;
         padding:8px 4px;
     }
@@ -248,11 +189,6 @@ button{
         font-size:10px;
         padding:5px 8px;
     }
-
-    .badge{
-        font-size:10px;
-        padding:3px 6px;
-    }
 }
 
 </style>
@@ -260,97 +196,81 @@ button{
 
 <body>
 
-<!-- TOP -->
+<!-- TOP BAR -->
 <div class="topBar">
 
-    <h1>📱 Smart Timetable</h1>
 
-    <select id="filterType" onchange="applyFilter()">
-        <option value="all">All Types</option>
-        <option value="tutorial">Tutorial</option>
-        <option value="assignment">Assignment</option>
-        <option value="quiz">Quiz</option>
-        <option value="discussion">Discussion</option>
-    </select>
+    <div class="margin-right:100px;">
 
-    <span class="darkToggle" onclick="toggleDark()">🌙</span>
+        <select id="filterType" onchange="applyFilter()">
+            <option value="all">All Types</option>
+            <option value="tutorial">Tutorial</option>
+            <option value="assignment">Assignment</option>
+            <option value="quiz">Quiz</option>
+            <option value="discussion">Discussion</option>
+        </select>
+
+        <span class="darkToggle" onclick="toggleDark()">🌙</span>
+
+    </div>
 
 </div>
 
-<!-- SAVED PAGE -->
+<!-- SAVED -->
 <div class="card section active" id="savedPage">
 
-    <button class="add" onclick="show('formPage')">
-        ➕ Add New
-    </button>
+<button class="add" onclick="show('formPage')">
+➕ Add New
+</button>
 
-    <!-- HEADER -->
+<div style="overflow-x:auto;">
     <div class="table">
 
-        <div class="header">📅 Date</div>
-        <div class="header">📆 Day</div>
-        <div class="header">📚 Subject</div>
-        <div class="header">📝 Type</div>
-        <div class="header">⏰ Time</div>
-        <div class="header">⚙️ Action</div>
+        <div class="header">Date</div>
+        <div class="header">Day</div>
+        <div class="header">Subject</div>
+        <div class="header">Type</div>
+        <div class="header">Time</div>
+        <div class="header">Action</div>
 
     </div>
 
     <div id="savedBox"></div>
+</div>
 
 </div>
 
-<!-- FORM PAGE -->
+<!-- FORM -->
 <div class="card section" id="formPage">
 
-    <label>Date</label>
-    <input type="date" id="dateInput" onchange="setDay()">
+<label>Date</label>
+<input type="date" id="dateInput" onchange="setDay()">
 
-    <div id="dayBox"
-    style="
-    padding:10px;
-    background:#eee;
-    border-radius:10px;
-    margin-bottom:10px;
-    ">
-    </div>
+<div id="dayBox" style="padding:10px;background:#eee;border-radius:10px;margin-bottom:10px;"></div>
 
-    <label>Subject</label>
-    <input id="subject">
+<label>Subject</label>
+<input id="subject">
 
-    <label>Type</label>
-    <input id="type">
+<label>Type</label>
+<input id="type">
 
-    <label>Time</label>
-    <input id="time" placeholder="1:00 - 2:00">
+<label>Time</label>
+<input id="time">
 
-    <button class="primary" onclick="saveData()">
-        💾 Save
-    </button>
-
-    <button class="back" onclick="show('savedPage')">
-        ⬅ Back
-    </button>
+<button class="primary" onclick="saveData()">💾 Save</button>
+<button class="back" onclick="show('savedPage')">⬅ Back</button>
 
 </div>
 
 <script>
 
-let savedData =
-JSON.parse(localStorage.getItem("data")) || [];
-
+let savedData = JSON.parse(localStorage.getItem("data")) || [];
 let editIndex = -1;
 
 /* PAGE */
 function show(id){
-
-    document
-    .querySelectorAll(".section")
-    .forEach(e=>e.classList.remove("active"));
-
-    document
-    .getElementById(id)
-    .classList.add("active");
+    document.querySelectorAll(".section").forEach(e=>e.classList.remove("active"));
+    document.getElementById(id).classList.add("active");
 }
 
 /* DARK */
@@ -360,57 +280,32 @@ function toggleDark(){
 
 /* DAY */
 function setDay(){
-
-    let d =
-    new Date(
-    document.getElementById("dateInput").value
-    );
-
-    let days =
-    ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
-
-    document.getElementById("dayBox").innerText =
-    days[d.getDay()];
+    let d = new Date(document.getElementById("dateInput").value);
+    let days=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+    document.getElementById("dayBox").innerText = days[d.getDay()];
 }
 
 /* SAVE */
 function saveData(){
 
     let obj = {
-
-        date:
-        document.getElementById("dateInput").value,
-
-        day:
-        document.getElementById("dayBox").innerText,
-
-        subject:
-        document.getElementById("subject").value,
-
-        type:
-        document.getElementById("type").value,
-
-        time:
-        document.getElementById("time").value
+        date: document.getElementById("dateInput").value,
+        day: document.getElementById("dayBox").innerText,
+        subject: document.getElementById("subject").value,
+        type: document.getElementById("type").value,
+        time: document.getElementById("time").value
     };
 
-    if(editIndex >= 0){
-
-        savedData[editIndex] = obj;
-        editIndex = -1;
-
+    if(editIndex>=0){
+        savedData[editIndex]=obj;
+        editIndex=-1;
     }else{
-
         savedData.push(obj);
     }
 
-    localStorage.setItem(
-    "data",
-    JSON.stringify(savedData)
-    );
+    localStorage.setItem("data",JSON.stringify(savedData));
 
     render();
-
     show("savedPage");
 }
 
@@ -419,136 +314,68 @@ function applyFilter(){
     render();
 }
 
-/* TYPE COLOR */
-function getTypeClass(type){
-
-    type = (type || "").toLowerCase();
-
-    if(type.includes("tutorial"))
-    return "tutorial";
-
-    if(type.includes("assignment"))
-    return "assignment";
-
-    if(type.includes("quiz"))
-    return "quiz";
-
-    if(type.includes("discussion"))
-    return "discussion";
-
-    return "default";
+/* TYPE */
+function getTypeClass(t){
+    t=(t||"").toLowerCase();
+    if(t.includes("tutorial"))return"tutorial";
+    if(t.includes("assignment"))return"assignment";
+    if(t.includes("quiz"))return"quiz";
+    if(t.includes("discussion"))return"discussion";
+    return"default";
 }
 
 /* RENDER */
 function render(){
 
-    let box =
-    document.getElementById("savedBox");
+let box=document.getElementById("savedBox");
+box.innerHTML="";
 
-    box.innerHTML = "";
+savedData.sort((a,b)=>new Date(a.date)-new Date(b.date));
 
-    savedData.sort((a,b)=>
-    new Date(a.date)-new Date(b.date)
-    );
+let filter=document.getElementById("filterType").value;
 
-    let filter =
-    document.getElementById("filterType").value;
+savedData.filter(d=>{
+    if(filter==="all")return true;
+    return getTypeClass(d.type)===filter;
+})
+.forEach((d,i)=>{
 
-    savedData
-    .filter(d=>{
+box.innerHTML+=`
 
-        if(filter==="all") return true;
+<div class="table">
 
-        return getTypeClass(d.type)===filter;
+<div class="cell">${d.date}</div>
+<div class="cell">${d.day}</div>
+<div class="cell">${d.subject}</div>
+<div class="cell"><span class="badge ${getTypeClass(d.type)}">${d.type}</span></div>
+<div class="cell">${d.time}</div>
 
-    })
+<div class="cell">
+<button class="editBtn" onclick="editData(${i})">Edit</button>
+</div>
 
-    .forEach((d,i)=>{
+</div>
 
-        box.innerHTML += `
+`;
 
-        <div class="table">
+});
 
-            <div class="cell">
-                ${d.date}
-            </div>
-
-            <div class="cell">
-                ${d.day}
-            </div>
-
-            <div class="cell">
-                ${d.subject}
-            </div>
-
-            <div class="cell">
-                <span class="badge ${getTypeClass(d.type)}">
-                    ${d.type}
-                </span>
-            </div>
-
-            <div class="cell">
-                ${d.time}
-            </div>
-
-            <div class="cell">
-                <button class="editBtn"
-                onclick="editData(${i})">
-                    Edit
-                </button>
-            </div>
-
-        </div>
-
-        `;
-    });
 }
 
 /* EDIT */
 function editData(i){
 
-    let d = savedData[i];
+let d=savedData[i];
 
-    document.getElementById("dateInput").value =
-    d.date;
+document.getElementById("dateInput").value=d.date;
+document.getElementById("subject").value=d.subject;
+document.getElementById("type").value=d.type;
+document.getElementById("time").value=d.time;
 
-    document.getElementById("subject").value =
-    d.subject;
-
-    document.getElementById("type").value =
-    d.type;
-
-    document.getElementById("time").value =
-    d.time;
-
-    setDay();
-
-    editIndex = i;
-
-    show("formPage");
+setDay();
+editIndex=i;
+show("formPage");
 }
-
-/* AUTO DELETE AFTER 4PM */
-function autoDeleteOldData(){
-
-    let now = new Date();
-
-    savedData = savedData.filter(item=>{
-
-        let itemDate = new Date(item.date);
-
-        itemDate.setHours(16,0,0,0);
-
-        return now < itemDate;
-    });
-
-    localStorage.setItem(
-    "data",
-    JSON.stringify(savedData)
-    );
-}
-
-autoDeleteOldData();
 
 render();
 
