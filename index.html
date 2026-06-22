@@ -30,10 +30,9 @@ body.dark select{
 /* TOP BAR FIX */
 .topBar{
     display:flex;
+    justify-content:flex-end;
     align-items:center;
-    justify-content:space-between;  /* 🔥 important */
-    padding:15px 20px;
-    flex-wrap:wrap;
+    padding:12px 15px;
 }
 
 /* RIGHT SIDE GROUP */
@@ -41,12 +40,11 @@ body.dark select{
     display:flex;
     align-items:center;
     gap:10px;
+    margin-left:auto;
 }
 
-/* FILTER */
 #filterType{
-    margin-right:150px ;
-    width:150px;
+    width:130px;
     padding:8px;
     border-radius:10px;
     border:1px solid #ddd;
@@ -56,6 +54,7 @@ body.dark select{
 .darkToggle{
     cursor:pointer;
     font-size:24px;
+    background-color:white;
 }
 
 /* CARD */
@@ -69,8 +68,19 @@ body.dark select{
     box-shadow:0 10px 25px rgba(0,0,0,0.1);
 }
 
+
 /* INPUT */
-input,select{
+input{
+    width:100%;
+    padding:12px;
+    margin-bottom:12px;
+    border:1px solid #ddd;
+    border-radius:10px;
+    font-size:15px;
+}
+
+/* FORM SELECT ONLY */
+#formPage select{
     width:100%;
     padding:12px;
     margin-bottom:12px;
@@ -148,6 +158,16 @@ button{
 .section{display:none;}
 .active{display:block;}
 
+.add{
+    background:#2196F3;
+    color:white;
+
+    width:auto;
+    padding:10px 16px;
+
+    margin-bottom:0;
+    white-space:nowrap;
+}
 /* BADGE */
 .badge{
     padding:4px 8px;
@@ -164,7 +184,13 @@ button{
 
 /* MOBILE */
 @media(max-width:700px){
+.topBar{
+    overflow-x:auto;
+}
 
+.rightControls{
+    min-width:max-content;
+}
     .leftTitle{font-size:22px;}
 
     #filterType{
@@ -199,8 +225,11 @@ button{
 <!-- TOP BAR -->
 <div class="topBar">
 
+    <div class="rightControls">
 
-    <div class="margin-right:100px;">
+        <button class="add" onclick="show('formPage')">
+            ➕ Add New
+        </button>
 
         <select id="filterType" onchange="applyFilter()">
             <option value="all">All Types</option>
@@ -210,18 +239,17 @@ button{
             <option value="discussion">Discussion</option>
         </select>
 
-        <span class="darkToggle" onclick="toggleDark()">🌙</span>
+        <span class="darkToggle" onclick="toggleDark()">
+            🌙
+        </span>
 
     </div>
 
 </div>
-
 <!-- SAVED -->
 <div class="card section active" id="savedPage">
 
-<button class="add" onclick="show('formPage')">
-➕ Add New
-</button>
+
 
 <div style="overflow-x:auto;">
     <div class="table">
