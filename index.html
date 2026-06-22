@@ -336,7 +336,29 @@ function saveData(){
     render();
     show("savedPage");
 }
+/* AUTO DELETE AFTER 4 PM */
+function removeExpiredData(){
 
+    let now = new Date();
+
+    savedData = savedData.filter(item => {
+
+        let itemDate = new Date(item.date);
+
+        // same date 4 PM
+        itemDate.setHours(16);
+        itemDate.setMinutes(0);
+        itemDate.setSeconds(0);
+
+        // keep only future items
+        return now < itemDate;
+    });
+
+    localStorage.setItem(
+        "data",
+        JSON.stringify(savedData)
+    );
+}
 /* FILTER */
 function applyFilter(){
     render();
@@ -354,6 +376,8 @@ function getTypeClass(t){
 
 /* RENDER */
 function render(){
+
+removeExpiredData();
 
 let box=document.getElementById("savedBox");
 box.innerHTML="";
