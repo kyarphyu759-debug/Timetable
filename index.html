@@ -180,6 +180,7 @@ button{
 .assignment{background:#c8b400;}
 .quiz{background:#0c9f35;}
 .discussion{background:#2304d6;}
+.presentation{background:#2196F3;}
 .default{background:#9b0396;}
 
 /* MOBILE */
@@ -237,6 +238,7 @@ button{
             <option value="assignment">Assignment</option>
             <option value="quiz">Quiz</option>
             <option value="discussion">Discussion</option>
+            <option value="presentation">Presentation</option>
         </select>
 
         <span class="darkToggle" onclick="toggleDark()">
@@ -371,6 +373,7 @@ function getTypeClass(t){
     if(t.includes("assignment"))return"assignment";
     if(t.includes("quiz"))return"quiz";
     if(t.includes("discussion"))return"discussion";
+    if(t.includes("presentation"))return"presentation";
     return"default";
 }
 
