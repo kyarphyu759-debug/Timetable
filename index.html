@@ -5,11 +5,11 @@
 <title>Kyar Phyu Timetable Pro</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- App Favicon & Apple Home Screen Icon -->
+<!-- App Favicon & Apple Home Screen Icon (icon.png သို့ ပြောင်းထားပါသည်) -->
 <link rel="icon" type="image/png" href="logo.png">
 <link rel="apple-touch-icon" href="logo.png">
 
-<!-- JSON ဖိုင် မလိုဘဲ HTML ထဲတွင် တိုက်ရိုက် Manifest Inline မြှုပ်ထည့်ခြင်း -->
+<!-- PWA Manifest Inline (icon.png သို့ ပြောင်းထားပါသည်) -->
 <link rel="manifest" href='data:application/manifest+json,{
   "name": "Timetable App",
   "short_name": "Timetable",
@@ -19,13 +19,13 @@
   "theme_color": "#1e293b",
   "icons": [
     {
-      "src": "logo.png",
+      "src": "icon.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "logo.png",
+      "src": "icon.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
@@ -615,7 +615,7 @@ function sendPushNotification(title, body) {
         try {
             new Notification(title, {
                 body: body,
-                icon: "logo.png"
+                icon: "icon.png"
             });
         } catch (e) {
             console.log("Push Error: ", e);
