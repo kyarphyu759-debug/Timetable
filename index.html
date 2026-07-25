@@ -1,223 +1,489 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Smart Timetable</title>
-
+<title>Smart Timetable Pro</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
+/* ================= BASE ================= */
+*{
+    box-sizing:border-box;
+}
 
-*{box-sizing:border-box;}
-
-body{
-    font-family:Arial;
+html,body{
     margin:0;
-    background:linear-gradient(135deg,#e3f2fd,#f3e5f5);
+    padding:0;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
+    background:#f8fafc;
+    color:#1e293b;
+    overflow-x:hidden;
 }
 
-/* DARK MODE */
-body.dark{background:#121212;color:white;}
-body.dark .card{background:#1e1e1e;color:white;}
-body.dark .cell{background:#2a2a2a;color:white;}
-body.dark .header{background:#333;}
-body.dark input,
-body.dark select{
-    background:#2a2a2a;
-    color:white;
-    border:1px solid #555;
+body.dark{
+    background:#0f172a;
+    color:#f1f5f9;
 }
 
-/* TOP BAR FIX */
+/* ================= TOP BAR ================= */
 .topBar{
     display:flex;
-    justify-content:flex-end;
     align-items:center;
-    padding:12px 15px;
+    justify-content:space-between;
+    padding:12px 16px;
+    background:#1e293b;
+    box-shadow:0 4px 20px rgba(0,0,0,0.08);
+    position:sticky;
+    top:0;
+    z-index:10;
+    gap: 10px;
 }
 
-/* RIGHT SIDE GROUP */
-.rightControls{
+body.dark .topBar{
+    background:#020617;
+    border-bottom: 1px solid #1e293b;
+}
+
+#searchInput{
+    flex: 1;
+    min-width: 0;
+    padding: 9px 14px;
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.1);
+    font-size: 13px;
+    background: rgba(255,255,255,0.95);
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+#searchInput:focus {
+    background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.3);
+}
+
+.topRight{
     display:flex;
     align-items:center;
-    gap:10px;
-    margin-left:auto;
-}
-
-#filterType{
-    width:130px;
-    padding:8px;
-    border-radius:10px;
-    border:1px solid #ddd;
-}
-
-/* DARK BUTTON */
-.darkToggle{
-    cursor:pointer;
-    font-size:24px;
-    background-color:white;
-}
-
-/* CARD */
-.card{
-    background:white;
-    width:95%;
-    max-width:1000px;
-    margin:auto;
-    padding:15px;
-    border-radius:20px;
-    box-shadow:0 10px 25px rgba(0,0,0,0.1);
-}
-
-
-/* INPUT */
-input{
-    width:100%;
-    padding:12px;
-    margin-bottom:12px;
-    border:1px solid #ddd;
-    border-radius:10px;
-    font-size:15px;
-}
-
-/* FORM SELECT ONLY */
-#formPage select{
-    width:100%;
-    padding:12px;
-    margin-bottom:12px;
-    border:1px solid #ddd;
-    border-radius:10px;
-    font-size:15px;
-}
-
-/* BUTTON */
-button{
-    width:100%;
-    padding:12px;
-    border:none;
-    border-radius:10px;
-    cursor:pointer;
-    font-size:15px;
-    margin-bottom:10px;
-}
-
-.add{background:#2196F3;color:white;}
-.primary{background:#4CAF50;color:white;}
-.back{background:#f44336;color:white;}
-
-.editBtn{
-    background:#d08b1f;
-    color:white;
-    padding:6px 12px;
-    border:none;
-    border-radius:8px;
-    cursor:pointer;
-    width:auto;
-}
-
-/* TABLE */
-.table{
-    display:grid;
-    grid-template-columns:
-    minmax(80px,1.2fr)
-    minmax(50px,0.7fr)
-    minmax(90px,1.2fr)
-    minmax(70px,1fr)
-    minmax(80px,1fr)
-    90px;
-
     gap:6px;
-    margin-top:8px;
-    align-items:center;
-    min-width:700px;
+    flex-shrink: 0;
 }
 
-/* HEADER */
-.header{
-    background:#1e88e5;
-    color:white;
-    font-weight:bold;
-    text-align:center;
-    padding:10px 6px;
-    border-radius:10px;
+.darkToggle{
+    font-size:18px;
+    cursor:pointer;
+    user-select:none;
+    padding: 6px;
+    border-radius: 50%;
+    transition: background 0.2s;
+}
+
+.darkToggle:hover {
+    background: rgba(255,255,255,0.1);
+}
+
+.navTopBtn {
+    background: rgba(255, 255, 255, 0.1);
+    color: #f8fafc;
+    border: none;
+    padding: 7px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    white-space: nowrap;
+    backdrop-filter: blur(5px);
+    transition: background 0.2s;
+}
+
+.navTopBtn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.clearTopBtn {
+    background: rgba(239, 68, 68, 0.15);
+    color: #fca5a5;
+    border: none;
+    padding: 7px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    gap: 4px;
+    white-space: nowrap;
+}
+
+/* ================= CONTAINER ================= */
+.card{
+    width:92%;
+    max-width:650px;
+    margin:16px auto;
+    background:#ffffff;
+    border-radius:20px;
+    padding:20px;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+}
+
+body.dark .card{
+    background:#1e293b;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+}
+
+#savedBox {
+    padding-bottom: 80px; 
+}
+
+/* ================= FORM ================= */
+label{
+    font-size:11px;
+    color:#64748b;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+}
+
+body.dark label{ color:#94a3b8; }
+
+input, select, textarea{
+    width:100%;
+    padding:12px;
+    margin:6px 0 16px;
+    border-radius:12px;
+    border:1px solid #e2e8f0;
     font-size:14px;
+    font-family: inherit;
+    background: #f8fafc;
+    color: #0f172a;
+    outline: none;
 }
 
-/* CELL */
-.cell{
-    background:#f5f5f5;
-    text-align:center;
-    padding:10px 6px;
-    border-radius:10px;
-    font-size:13px;
-    overflow:hidden;
-    text-overflow:ellipsis;
-    white-space:nowrap;
+body.dark input,
+body.dark select,
+body.dark textarea{
+    background:#0f172a;
+    color:#f8fafc;
+    border:1px solid #334155;
 }
 
-/* SECTION */
+/* ================= BUTTONS ================= */
+button{
+    border:none;
+    border-radius:12px;
+    cursor:pointer;
+    font-size:14px;
+    transition: transform 0.1s ease, opacity 0.2s ease;
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
+.primary{
+    width:100%;
+    padding:14px;
+    background:#2563eb;
+    color:white; 
+    font-weight: 600;
+    margin-top: 5px;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+}
+.back{
+    width:100%;
+    padding:12px;
+    background:#64748b;
+    color:white;
+    margin-top: 8px;
+}
+
+/* ================= REFINED ITEM CARD ================= */
+.item{
+    background: #ffffff;
+    padding: 16px 18px;
+    border-radius: 16px;
+    margin-bottom: 14px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    border: 1px solid #e2e8f0;
+    position: relative;
+    overflow: hidden;
+}
+
+body.dark .item {
+    background: #0f172a;
+    border: 1px solid #1e293b;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Left Accent Line */
+.item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 5px;
+    height: 100%;
+    background: #3b82f6;
+    border-radius: 4px 0 0 4px;
+}
+
+.item.today::before { background: #f97316; }
+.item.one-day-alert::before { background: #ef4444; }
+.item.completed::before { background: #94a3b8; }
+
+.item.today {
+    background: #fff8f5;
+    border-color: #ffedd5;
+}
+body.dark .item.today { background: #1c130b; border-color: #431407; }
+
+.item.one-day-alert {
+    background: #fef2f2;
+    border-color: #fee2e2;
+}
+body.dark .item.one-day-alert { background: #1a0c0c; border-color: #450a0a; }
+
+.item.completed {
+    opacity: 0.65;
+    background: #f8fafc;
+}
+body.dark .item.completed { background: #0b0f19; }
+
+/* Header Info Row */
+.card-top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.date-group {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.item .date {
+    font-size: 13px;
+    font-weight: 700;
+    color: #334155;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+body.dark .item .date { color: #cbd5e1; }
+
+.status-pill {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.pill-today { background: #ffedd5; color: #c2410c; }
+body.dark .pill-today { background: #431407; color: #fb923c; }
+
+.pill-tomorrow { background: #fee2e2; color: #b91c1c; }
+body.dark .pill-tomorrow { background: #450a0a; color: #fca5a5; }
+
+.pill-completed { background: #e2e8f0; color: #475569; }
+body.dark .pill-completed { background: #1e293b; color: #94a3b8; }
+
+.subject-title {
+    font-size: 17px;
+    font-weight: 800;
+    color: #0f172a;
+    margin: 6px 0 10px 0;
+    letter-spacing: -0.2px;
+}
+body.dark .subject-title { color: #f8fafc; }
+
+/* Meta Info Row (Time & Alarm) */
+.meta-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    flex-wrap: wrap;
+    background: rgba(0, 0, 0, 0.02);
+    padding: 8px 12px;
+    border-radius: 10px;
+    margin-bottom: 8px;
+}
+
+body.dark .meta-row {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.time-text {
+    font-size: 13px;
+    font-weight: 600;
+    color: #475569;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+body.dark .time-text { color: #94a3b8; }
+
+.reminder-chip {
+    font-size: 11px;
+    color: #0284c7;
+    font-weight: 600;
+    background: #e0f2fe;
+    padding: 3px 10px;
+    border-radius: 12px;
+    white-space: nowrap;
+}
+body.dark .reminder-chip {
+    background: #075985;
+    color: #bae6fd;
+}
+
+.note-box {
+    margin-top: 8px;
+    padding: 8px 12px;
+    background: #f1f5f9;
+    border-radius: 8px;
+    font-size: 12px;
+    color: #475569;
+    line-height: 1.4;
+}
+
+body.dark .note-box {
+    background: #1e293b;
+    color: #cbd5e1;
+}
+
+/* BADGES */
+.badge{
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-size: 10px;
+    color: white;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+}
+
+.tutorial{ background:#ef4444; }
+.assignment{ background:#f59e0b; }
+.quiz{ background:#10b981; }
+.discussion{ background:#3b82f6; }
+.default{ background:#8b5cf6; }
+
+/* ACTION BUTTONS */
+.actionBtns {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px dashed #e2e8f0;
+}
+
+body.dark .actionBtns {
+    border-top: 1px dashed #334155;
+}
+
+.iconBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 14px;
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.editBtn { 
+    background: #fef3c7; 
+    color: #b45309; 
+}
+body.dark .editBtn { 
+    background: #451a03; 
+    color: #fcd34d; 
+}
+
+.deleteBtn { 
+    background: #ffe4e6; 
+    color: #be123c; 
+}
+body.dark .deleteBtn { 
+    background: #4c0519; 
+    color: #fda4af; 
+}
+
+.emptyMsg {
+    text-align: center;
+    color: #94a3b8;
+    padding: 40px 0;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* ================= FLOATING BUTTON ================= */
+.fab{
+    position:fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    background: #2563eb;
+    color: white;
+    font-size: 28px;
+    border: none;
+    box-shadow: 0 8px 20px rgba(37, 99, 235, 0.35);
+    cursor: pointer;
+    z-index: 99;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ================= CUSTOM MODAL ================= */
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(4px);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-box {
+    background: white;
+    width: 88%;
+    max-width: 340px;
+    border-radius: 20px;
+    padding: 24px;
+    text-align: center;
+    box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+}
+
+body.dark .modal-box { background: #1e293b; color: white; }
+.modal-icon { font-size: 40px; margin-bottom: 8px; }
+.modal-title { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+.modal-msg { font-size: 13px; color: #64748b; margin-bottom: 20px; text-align: left; line-height: 1.5; }
+body.dark .modal-msg { color: #94a3b8; }
+.modal-btns { display: flex; gap: 10px; }
+.modal-btn { flex: 1; padding: 11px; border-radius: 12px; font-weight: 700; font-size: 13px; }
+.btn-cancel { background: #f1f5f9; color: #475569; }
+body.dark .btn-cancel { background: #334155; color: #cbd5e1; }
+.btn-confirm { background: #2563eb; color: white; }
+
 .section{display:none;}
 .active{display:block;}
-
-.add{
-    background:#2196F3;
-    color:white;
-
-    width:auto;
-    padding:10px 16px;
-
-    margin-bottom:0;
-    white-space:nowrap;
-}
-/* BADGE */
-.badge{
-    padding:4px 8px;
-    border-radius:12px;
-    font-size:12px;
-    color:white;
-}
-
-.tutorial{background:#d22f0a;}
-.assignment{background:#c8b400;}
-.quiz{background:#0c9f35;}
-.discussion{background:#2304d6;}
-.presentation{background:#2196F3;}
-.default{background:#9b0396;}
-
-/* MOBILE */
-@media(max-width:700px){
-.topBar{
-    overflow-x:auto;
-}
-
-.rightControls{
-    min-width:max-content;
-}
-    .leftTitle{font-size:22px;}
-
-    #filterType{
-        width:120px;
-        font-size:12px;
-    }
-
-    .darkToggle{
-        font-size:20px;
-    }
-
-    .table{min-width:650px;}
-
-    .card{overflow-x:auto;}
-
-    .header,.cell{
-        font-size:11px;
-        padding:8px 4px;
-    }
-
-    .editBtn{
-        font-size:10px;
-        padding:5px 8px;
-    }
-}
-
 </style>
 </head>
 
@@ -225,215 +491,494 @@ button{
 
 <!-- TOP BAR -->
 <div class="topBar">
-
-    <div class="rightControls">
-
-        <button class="add" onclick="show('formPage')">
-            ➕ Add New
+    <input type="text" id="searchInput" placeholder="Search..." oninput="render()">
+    
+    <div class="topRight">
+        <button class="navTopBtn" onclick="handleTestButtonClick()">
+            <span>🔊</span> Test
         </button>
-
-        <select id="filterType" onchange="applyFilter()">
-            <option value="all">All Types</option>
-            <option value="tutorial">Tutorial</option>
-            <option value="assignment">Assignment</option>
-            <option value="quiz">Quiz</option>
-            <option value="discussion">Discussion</option>
-            <option value="presentation">Presentation</option>
-        </select>
-
-        <span class="darkToggle" onclick="toggleDark()">
-            🌙
-        </span>
-
+        <button class="navTopBtn" onclick="toggleHistoryView()" id="historyNavBtn">
+            <span>📜</span> History
+        </button>
+        <button class="clearTopBtn" onclick="confirmClearAll()" id="clearAllBtn">
+            <span>🗑️</span> Clear
+        </button>
+        <span class="darkToggle" onclick="toggleDark()" id="darkIcon">🌙</span>
     </div>
-
 </div>
-<!-- SAVED -->
+
+<!-- LIST PAGE -->
 <div class="card section active" id="savedPage">
-
-
-
-<div style="overflow-x:auto;">
-    <div class="table">
-
-        <div class="header">Date</div>
-        <div class="header">Day</div>
-        <div class="header">Subject</div>
-        <div class="header">Type</div>
-        <div class="header">Time</div>
-        <div class="header">Action</div>
-
-    </div>
-
+    <h3 id="pageTitle" style="margin-top:0; margin-bottom: 16px; font-size:15px; font-weight: 700; color:#64748b;">📅 Active Timetables</h3>
     <div id="savedBox"></div>
 </div>
 
+<!-- FORM PAGE -->
+<div class="card section" id="formPage">
+    <label>Date</label>
+    <input type="date" id="dateInput" onchange="setDay()">
+
+    <label>Day</label>
+    <div id="dayBox" style="padding:12px; background:#f1f5f9; border-radius:12px; margin-bottom:16px; font-weight:700; color:#334155;">-</div>
+
+    <label>Subject</label>
+    <input id="subject" placeholder="e.g. Data Science">
+
+    <label>Type</label>
+    <select id="type">
+        <option value="tutorial">Tutorial</option>
+        <option value="assignment">Assignment</option>
+        <option value="quiz">Quiz</option>
+        <option value="discussion">Discussion</option>
+        <option value="other">Other</option>
+    </select>
+
+    <label>Time</label>
+    <input type="time" id="time">
+
+    <label>Exact Sound Alarm (သတိပေးမည့်အချိန်)</label>
+    <select id="exactReminder">
+        <option value="15">15 Minutes Before</option>
+        <option value="30" selected>30 Minutes Before</option>
+        <option value="60">1 Hour Before</option>
+        <option value="120">2 Hours Before</option>
+        <option value="420">At 7:00 AM (Exam Day)</option>
+    </select>
+
+    <label>Note / Description (Optional)</label>
+    <textarea id="noteInput" rows="2" placeholder="e.g. Room 302, Bring textbook..."></textarea>
+
+    <button class="primary" onclick="saveData()">Save Timetable</button>
+    <button class="back" onclick="show('savedPage')">Cancel</button>
 </div>
 
-<!-- FORM -->
-<div class="card section" id="formPage">
+<!-- FLOATING BUTTON -->
+<button class="fab" onclick="openAddForm()">+</button>
 
-<label>Date</label>
-<input type="date" id="dateInput" onchange="setDay()">
-
-<div id="dayBox" style="padding:10px;background:#eee;border-radius:10px;margin-bottom:10px;"></div>
-
-<label>Subject</label>
-<input id="subject">
-
-<label>Type</label>
-<input id="type">
-
-<label>Time</label>
-<input id="time">
-
-<button class="primary" onclick="saveData()">💾 Save</button>
-<button class="back" onclick="show('savedPage')">⬅ Back</button>
-
+<!-- CUSTOM MODAL -->
+<div class="modal-overlay" id="confirmModal">
+    <div class="modal-box">
+        <div class="modal-icon" id="modalIcon">⚠️</div>
+        <div class="modal-title" id="modalTitle">Are you sure?</div>
+        <div class="modal-msg" id="modalMsg">Timetable အချက်အလက်များကို ဖျက်ရန် သေချာပါသလား?</div>
+        <div class="modal-btns">
+            <button class="modal-btn btn-cancel" onclick="closeModal()">ပိတ်မည်</button>
+            <button class="modal-btn btn-confirm" id="modalConfirmBtn">အတည်ပြုမည်</button>
+        </div>
+    </div>
 </div>
 
 <script>
-
 let savedData = JSON.parse(localStorage.getItem("data")) || [];
 let editIndex = -1;
+let onConfirmAction = null;
+let currentTab = "active"; 
+let audioCtx = null;
 
-/* PAGE */
+if ("Notification" in window && Notification.permission === "default") {
+    Notification.requestPermission();
+}
+
+function sendPushNotification(title, body) {
+    if ("Notification" in window && Notification.permission === "granted") {
+        try {
+            new Notification(title, {
+                body: body,
+                icon: "https://cdn-icons-png.flaticon.com/512/3602/3602145.png"
+            });
+        } catch (e) {
+            console.log("Push Error: ", e);
+        }
+    }
+}
+
+function initAudioContext() {
+    if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+    }
+}
+
+window.addEventListener('click', initAudioContext);
+window.addEventListener('touchstart', initAudioContext);
+
+function playUrgentAlarmSound() {
+    try {
+        initAudioContext();
+        let now = audioCtx.currentTime;
+        for (let i = 0; i < 3; i++) {
+            let osc = audioCtx.createOscillator();
+            let gain = audioCtx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(880, now + (i * 0.25));
+            gain.gain.setValueAtTime(0.6, now + (i * 0.25));
+            gain.gain.exponentialRampToValueAtTime(0.001, now + (i * 0.25) + 0.2);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start(now + (i * 0.25));
+            osc.stop(now + (i * 0.25) + 0.2);
+        }
+    } catch (e) {}
+}
+
+function playNotificationSound() {
+    try {
+        initAudioContext();
+        let now = audioCtx.currentTime;
+        let osc1 = audioCtx.createOscillator();
+        let gain1 = audioCtx.createGain();
+        osc1.type = 'sine';
+        osc1.frequency.setValueAtTime(523.25, now);
+        osc1.frequency.exponentialRampToValueAtTime(880, now + 0.2);
+        gain1.gain.setValueAtTime(0.4, now);
+        gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
+        osc1.connect(gain1);
+        gain1.connect(audioCtx.destination);
+        osc1.start(now);
+        osc1.stop(now + 0.4);
+    } catch (e) {}
+}
+
+function handleTestButtonClick() {
+    playNotificationSound();
+    let activeItems = savedData.filter(d => !d.done);
+    if (activeItems.length === 0) {
+        showModal("ℹ️", "အချက်အလက် မရှိပါ", "<center>လက်ရှိ လာမည့်ရက်များတွင် စာမေးပွဲ/အတန်း မရှိသေးပါ။</center>", null, false);
+        return;
+    }
+
+    let now = new Date();
+    let tomorrowObj = new Date(now);
+    tomorrowObj.setDate(now.getDate() + 1);
+    let tYear = tomorrowObj.getFullYear();
+    let tMonth = String(tomorrowObj.getMonth() + 1).padStart(2, '0');
+    let tDayStr = String(tomorrowObj.getDate()).padStart(2, '0');
+    let tomorrowDateStr = `${tYear}-${tMonth}-${tDayStr}`;
+
+    let tomorrowItems = activeItems.filter(item => item.date === tomorrowDateStr);
+
+    if (tomorrowItems.length > 0) {
+        let detailsHTML = tomorrowItems.map(item => `
+            <div style="background:rgba(239, 68, 68, 0.1); padding:10px; border-radius:10px; margin-top:8px; border-left:3px solid #ef4444; font-size:12px;">
+                <b>📚 Subject:</b> ${item.subject}<br>
+                <b>📌 Type:</b> ${item.type}<br>
+                <b>📅 Date:</b> ${item.date} (${item.day})<br>
+                <b>⏰ Time:</b> ${formatAMPM(item.time)}
+            </div>
+        `).join("");
+        showModal("🚨", "မနက်ဖြန် ဖြေဆိုရမည့် စာမေးပွဲ", detailsHTML, null, false);
+    } else {
+        showModal("ℹ️", "သတင်းအချက်အလက်", "<center>မနက်ဖြန်တွင် စာမေးပွဲ မရှိပါ။</center>", null, false);
+    }
+}
+
 function show(id){
     document.querySelectorAll(".section").forEach(e=>e.classList.remove("active"));
     document.getElementById(id).classList.add("active");
 }
 
-/* DARK */
 function toggleDark(){
     document.body.classList.toggle("dark");
+    const isDark = document.body.classList.contains("dark");
+    document.getElementById("darkIcon").innerText = isDark ? "☀️" : "🌙";
 }
 
-/* DAY */
+function toggleHistoryView(){
+    if(currentTab === "active") {
+        currentTab = "history";
+        document.getElementById("historyNavBtn").innerHTML = "<span>📅</span> Active";
+        document.getElementById("pageTitle").innerText = "📜 History (Completed)";
+    } else {
+        currentTab = "active";
+        document.getElementById("historyNavBtn").innerHTML = "<span>📜</span> History";
+        document.getElementById("pageTitle").innerText = "📅 Active Timetables";
+    }
+    render();
+}
+
 function setDay(){
-    let d = new Date(document.getElementById("dateInput").value);
-    let days=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
-    document.getElementById("dayBox").innerText = days[d.getDay()];
+    if(!dateInput.value) {
+        dayBox.innerText = "-";
+        return;
+    }
+    let d = new Date(dateInput.value);
+    let days = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+    dayBox.innerText = days[d.getUTCDay()];
 }
 
-/* SAVE */
+function openAddForm(){
+    clearForm();
+    editIndex = -1;
+    show('formPage');
+}
+
+function clearForm(){
+    dateInput.value = "";
+    dayBox.innerText = "-";
+    subject.value = "";
+    type.value = "tutorial";
+    time.value = "";
+    exactReminder.value = "30";
+    noteInput.value = "";
+}
+
+function formatAMPM(timeString) {
+    if(!timeString) return "";
+    let [hours, minutes] = timeString.split(':');
+    hours = parseInt(hours);
+    let ampm = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12;
+    hours = hours ? hours : 12; 
+    return `${hours}:${minutes} ${ampm}`;
+}
+
+function checkExactAlarm(item) {
+    if (item.done || item.exactNotified) return;
+
+    let now = new Date();
+    let itemDateTime = new Date(`${item.date}T${item.time}`);
+    let leadMinutes = parseInt(item.exactReminder || 30);
+    let alarmTime = new Date(itemDateTime.getTime() - (leadMinutes * 60 * 1000));
+
+    if (now >= alarmTime && now < itemDateTime) {
+        playUrgentAlarmSound();
+        sendPushNotification(`⏰ ${item.subject}`, `${item.type} စတင်ရန် ${leadMinutes} မိနစ်ခန့်သာ လိုပါတော့သည်။`);
+        item.exactNotified = true;
+    }
+}
+
+function checkOneDayAlarm(item) {
+    if (item.done) return;
+
+    let now = new Date();
+    let itemDateTime = new Date(`${item.date}T${item.time}`);
+    let timeDiff = itemDateTime - now;
+    let hoursLeft = timeDiff / (1000 * 60 * 60);
+
+    if (hoursLeft > 0 && hoursLeft <= 24) {
+        if (!item.notified) {
+            playNotificationSound(); 
+            sendPushNotification("🚨 မနက်ဖြန် စာမေးပွဲ/အတန်း ရှိပါသည်", `${item.subject} (${item.type}) - Time: ${formatAMPM(item.time)}`);
+            item.notified = true;
+        }
+    }
+}
+
+function autoCheckExpired(){
+    let now = new Date();
+    let updated = false;
+
+    savedData.forEach(item => {
+        checkOneDayAlarm(item);
+        checkExactAlarm(item);
+
+        if(!item.done && item.date && item.time){
+            let itemDateTime = new Date(`${item.date}T${item.time}`);
+            if(now > itemDateTime){
+                item.done = true;
+                updated = true;
+            }
+        }
+    });
+
+    if(updated){
+        localStorage.setItem("data", JSON.stringify(savedData));
+    }
+}
+
 function saveData(){
+    if(!dateInput.value || !subject.value || !time.value){
+        showModal("⚠️", "သတိပေးချက်", "<center>ကျေးဇူးပြု၍ အချက်အလက်များ ဖြည့်စွက်ပါ။</center>", null, false);
+        return;
+    }
 
     let obj = {
-        date: document.getElementById("dateInput").value,
-        day: document.getElementById("dayBox").innerText,
-        subject: document.getElementById("subject").value,
-        type: document.getElementById("type").value,
-        time: document.getElementById("time").value
+        date: dateInput.value,
+        day: dayBox.innerText,
+        subject: subject.value,
+        type: type.value,
+        time: time.value,
+        exactReminder: exactReminder.value,
+        note: noteInput.value,
+        done: false,
+        notified: false,
+        exactNotified: false
     };
 
-    if(editIndex>=0){
-        savedData[editIndex]=obj;
-        editIndex=-1;
+    if(editIndex >= 0){
+        obj.done = savedData[editIndex].done;
+        obj.notified = savedData[editIndex].notified;
+        obj.exactNotified = savedData[editIndex].exactNotified;
+        savedData[editIndex] = obj;
     }else{
         savedData.push(obj);
     }
 
-    localStorage.setItem("data",JSON.stringify(savedData));
-
+    autoCheckExpired();
+    savedData.sort((a,b) => new Date(a.date) - new Date(b.date));
+    localStorage.setItem("data", JSON.stringify(savedData));
     render();
     show("savedPage");
 }
-/* AUTO DELETE AFTER 4 PM */
-function removeExpiredData(){
 
-    let now = new Date();
+function getTypeClass(t){
+    t = (t||"").toLowerCase();
+    if(t.includes("tutorial")) return "tutorial";
+    if(t.includes("assignment")) return "assignment";
+    if(t.includes("quiz")) return "quiz";
+    if(t.includes("discussion")) return "discussion";
+    return "default";
+}
 
-    savedData = savedData.filter(item => {
+function render(){
+    autoCheckExpired(); 
 
-        let itemDate = new Date(item.date);
+    let box = document.getElementById("savedBox");
+    box.innerHTML = "";
 
-        // same date 4 PM
-        itemDate.setHours(16);
-        itemDate.setMinutes(0);
-        itemDate.setSeconds(0);
+    let searchText = searchInput.value.toLowerCase();
+    let clearAllBtn = document.getElementById("clearAllBtn");
 
-        // keep only future items
-        return now < itemDate;
+    clearAllBtn.style.display = (savedData.length > 0) ? "inline-flex" : "none";
+
+    let todayObj = new Date();
+    let year = todayObj.getFullYear();
+    let month = String(todayObj.getMonth() + 1).padStart(2, '0');
+    let dayStr = String(todayObj.getDate()).padStart(2, '0');
+    let todayDateStr = `${year}-${month}-${dayStr}`;
+
+    let tomorrowObj = new Date(todayObj);
+    tomorrowObj.setDate(todayObj.getDate() + 1);
+    let tYear = tomorrowObj.getFullYear();
+    let tMonth = String(tomorrowObj.getMonth() + 1).padStart(2, '0');
+    let tDayStr = String(tomorrowObj.getDate()).padStart(2, '0');
+    let tomorrowDateStr = `${tYear}-${tMonth}-${tDayStr}`;
+
+    let filteredData = savedData.filter(d => {
+        let matchesSearch = d.subject.toLowerCase().includes(searchText) || d.type.toLowerCase().includes(searchText);
+        let matchesTab = (currentTab === "history") ? d.done : !d.done;
+        return matchesSearch && matchesTab;
     });
 
-    localStorage.setItem(
-        "data",
-        JSON.stringify(savedData)
-    );
-}
-/* FILTER */
-function applyFilter(){
-    render();
-}
+    if(filteredData.length === 0){
+        box.innerHTML = `<div class="emptyMsg">${currentTab === "history" ? "ပြီးစီးခဲ့သည့် အချက်အလက် မရှိပါ။" : "အချက်အလက် မရှိသေးပါ။"}</div>`;
+        return;
+    }
 
-/* TYPE */
-function getTypeClass(t){
-    t=(t||"").toLowerCase();
-    if(t.includes("tutorial"))return"tutorial";
-    if(t.includes("assignment"))return"assignment";
-    if(t.includes("quiz"))return"quiz";
-    if(t.includes("discussion"))return"discussion";
-    if(t.includes("presentation"))return"presentation";
-    return"default";
-}
+    filteredData.forEach((d)=>{
+        let originalIndex = savedData.indexOf(d);
+        let isToday = (d.date === todayDateStr);
+        let isTomorrow = (d.date === tomorrowDateStr);
+        let isDone = d.done;
+        
+        let cardStateClass = (isToday && !isDone) ? "today" : ((isTomorrow && !isDone) ? "one-day-alert" : (isDone ? "completed" : ""));
+        
+        let statusTag = "";
+        if (!isDone) {
+            if (isToday) statusTag = `<span class="status-pill pill-today">🔥 Today</span>`;
+            else if (isTomorrow) statusTag = `<span class="status-pill pill-tomorrow">⚠️ Tomorrow</span>`;
+        } else {
+            statusTag = `<span class="status-pill pill-completed">✅ Completed</span>`;
+        }
 
-/* RENDER */
-function render(){
+        let noteHTML = d.note ? `<div class="note-box">📝 ${d.note}</div>` : "";
+        let reminderText = `⏱️ Alarm: ${d.exactReminder || 30}m before`;
 
-removeExpiredData();
+        box.innerHTML += `
+        <div class="item ${cardStateClass}">
+            <div class="card-top-row">
+                <div class="date-group">
+                    <span class="date">📅 ${d.date} (${d.day})</span>
+                    ${statusTag}
+                </div>
+                <span class="badge ${getTypeClass(d.type)}">${d.type}</span>
+            </div>
 
-let box=document.getElementById("savedBox");
-box.innerHTML="";
+            <div class="subject-title">📚 ${d.subject}</div>
 
-savedData.sort((a,b)=>new Date(a.date)-new Date(b.date));
+            <div class="meta-row">
+                <span class="time-text">⏰ ${formatAMPM(d.time)}</span>
+                <span class="reminder-chip">${reminderText}</span>
+            </div>
 
-let filter=document.getElementById("filterType").value;
+            ${noteHTML}
 
-savedData.filter(d=>{
-    if(filter==="all")return true;
-    return getTypeClass(d.type)===filter;
-})
-.forEach((d,i)=>{
-
-box.innerHTML+=`
-
-<div class="table">
-
-<div class="cell">${d.date}</div>
-<div class="cell">${d.day}</div>
-<div class="cell">${d.subject}</div>
-<div class="cell"><span class="badge ${getTypeClass(d.type)}">${d.type}</span></div>
-<div class="cell">${d.time}</div>
-
-<div class="cell">
-<button class="editBtn" onclick="editData(${i})">Edit</button>
-</div>
-
-</div>
-
-`;
-
-});
-
+            <div class="actionBtns">
+                <button class="iconBtn editBtn" onclick="editData(${originalIndex})">
+                    <span>✏️</span> Edit
+                </button>
+                <button class="iconBtn deleteBtn" onclick="confirmDeleteData(${originalIndex})">
+                    <span>🗑️</span> Delete
+                </button>
+            </div>
+        </div>`;
+    });
 }
 
-/* EDIT */
 function editData(i){
-
-let d=savedData[i];
-
-document.getElementById("dateInput").value=d.date;
-document.getElementById("subject").value=d.subject;
-document.getElementById("type").value=d.type;
-document.getElementById("time").value=d.time;
-
-setDay();
-editIndex=i;
-show("formPage");
+    let d = savedData[i];
+    dateInput.value = d.date;
+    subject.value = d.subject;
+    type.value = d.type;
+    time.value = d.time;
+    exactReminder.value = d.exactReminder || "30";
+    noteInput.value = d.note || "";
+    setDay();
+    editIndex = i;
+    show('formPage');
 }
+
+function showModal(icon, title, msgHTML, actionCallback, showCancelBtn = true) {
+    document.getElementById("modalIcon").innerText = icon;
+    document.getElementById("modalTitle").innerText = title;
+    document.getElementById("modalMsg").innerHTML = msgHTML;
+    
+    let cancelBtn = document.querySelector(".btn-cancel");
+    let confirmBtn = document.getElementById("modalConfirmBtn");
+    
+    cancelBtn.style.display = showCancelBtn ? "block" : "none";
+    confirmBtn.innerText = showCancelBtn ? "ဖျက်မည်" : "ပိတ်မည်";
+
+    onConfirmAction = actionCallback;
+    document.getElementById("confirmModal").style.display = "flex";
+}
+
+function closeModal() {
+    document.getElementById("confirmModal").style.display = "none";
+    onConfirmAction = null;
+}
+
+document.getElementById("modalConfirmBtn").onclick = function() {
+    if (onConfirmAction) {
+        onConfirmAction();
+    }
+    closeModal();
+};
+
+function confirmDeleteData(i) {
+    showModal("🗑️", "ဖျက်ရန် သေချာပါသလား?", "<center>ဤ Timetable ကို ဖျက်လိုက်ပါမည်။</center>", function() {
+        savedData.splice(i, 1);
+        localStorage.setItem("data", JSON.stringify(savedData));
+        render();
+    }, true);
+}
+
+function confirmClearAll() {
+    showModal("⚠️", "အားလုံးကို ဖျက်မည်", "<center>အချက်အလက် အားလုံးကို ဖျက်ရန် သေချာပါသလား?</center>", function() {
+        savedData = [];
+        localStorage.removeItem("data");
+        render();
+    }, true);
+}
+
+setInterval(() => {
+    autoCheckExpired();
+    render();
+}, 5000);
 
 render();
-
 </script>
 
 </body>
